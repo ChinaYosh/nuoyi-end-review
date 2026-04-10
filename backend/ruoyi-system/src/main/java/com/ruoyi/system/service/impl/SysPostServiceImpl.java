@@ -3,6 +3,7 @@ package com.ruoyi.system.service.impl;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
@@ -34,7 +35,12 @@ public class SysPostServiceImpl implements ISysPostService
     @Override
     public List<SysPost> selectPostList(SysPost post)
     {
-        return postMapper.selectPostList(post);
+        LambdaQueryWrapper<SysPost> wrapper = new LambdaQueryWrapper<>();
+        wrapper.like(StringUtils.isNotEmpty(post.getPostCode()), SysPost::getPostCode, post.getPostCode())
+               .eq(StringUtils.isNotEmpty(post.getStatus()), SysPost::getStatus, post.getStatus())
+               .like(StringUtils.isNotEmpty(post.getPostName()), SysPost::getPostName, post.getPostName())
+               .orderByAsc(SysPost::getPostSort);
+        return postMapper.selectList(wrapper);
     }
 
     /**
@@ -45,7 +51,7 @@ public class SysPostServiceImpl implements ISysPostService
     @Override
     public List<SysPost> selectPostAll()
     {
-        return postMapper.selectPostAll();
+        return postMapper.selectList(new LambdaQueryWrapper<>());
     }
 
     /**
@@ -82,7 +88,11 @@ public class SysPostServiceImpl implements ISysPostService
     public boolean checkPostNameUnique(SysPost post)
     {
         Long postId = StringUtils.isNull(post.getPostId()) ? -1L : post.getPostId();
-        SysPost info = postMapper.checkPostNameUnique(post.getPostName());
+        SysPost info = postMapper.selectOne(
+            new LambdaQueryWrapper<SysPost>()
+                .eq(SysPost::getPostName, post.getPostName())
+                .last("limit 1")
+        );
         if (StringUtils.isNotNull(info) && info.getPostId().longValue() != postId.longValue())
         {
             return UserConstants.NOT_UNIQUE;
@@ -100,7 +110,11 @@ public class SysPostServiceImpl implements ISysPostService
     public boolean checkPostCodeUnique(SysPost post)
     {
         Long postId = StringUtils.isNull(post.getPostId()) ? -1L : post.getPostId();
-        SysPost info = postMapper.checkPostCodeUnique(post.getPostCode());
+        SysPost info = postMapper.selectOne(
+            new LambdaQueryWrapper<SysPost>()
+                .eq(SysPost::getPostCode, post.getPostCode())
+                .last("limit 1")
+        );
         if (StringUtils.isNotNull(info) && info.getPostId().longValue() != postId.longValue())
         {
             return UserConstants.NOT_UNIQUE;

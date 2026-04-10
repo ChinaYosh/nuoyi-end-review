@@ -91,30 +91,6 @@ public interface SysUserMapper extends BaseMapper<SysUser>
     public int resetUserPwd(@Param("userId") Long userId, @Param("password") String password);
 
     /**
-     * 校验用户名称是否唯一
-     *
-     * @param userName 用户名称
-     * @return 结果
-     */
-    public SysUser checkUserNameUnique(String userName);
-
-    /**
-     * 校验手机号码是否唯一
-     *
-     * @param phonenumber 手机号码
-     * @return 结果
-     */
-    public SysUser checkPhoneUnique(String phonenumber);
-
-    /**
-     * 校验email是否唯一
-     *
-     * @param email 用户邮箱
-     * @return 结果
-     */
-    public SysUser checkEmailUnique(String email);
-
-    /**
      * 新增用户
      *
      * @param user 用户信息

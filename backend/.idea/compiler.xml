@@ -18,7 +18,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="aipel-hub" options="-parameters" />
+      <module name="local-nuoyi-study" options="-parameters" />
       <module name="ruoyi-admin" options="-parameters" />
       <module name="ruoyi-common" options="-parameters" />
       <module name="ruoyi-framework" options="-parameters" />

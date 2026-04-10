@@ -2,7 +2,10 @@ package com.ruoyi.system.service.impl;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import org.springframework.stereotype.Service;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysOperLog;
 import com.ruoyi.system.mapper.SysOperLogMapper;
 import com.ruoyi.system.service.ISysOperLogService;
@@ -39,7 +42,24 @@ public class SysOperLogServiceImpl implements ISysOperLogService
     @Override
     public List<SysOperLog> selectOperLogList(SysOperLog operLog)
     {
-        return operLogMapper.selectOperLogList(operLog);
+        LambdaQueryWrapper<SysOperLog> wrapper = new LambdaQueryWrapper<>();
+        wrapper.like(StringUtils.isNotEmpty(operLog.getTitle()), SysOperLog::getTitle, operLog.getTitle())
+               .eq(operLog.getBusinessType() != null && operLog.getBusinessType() > 0, SysOperLog::getBusinessType, operLog.getBusinessType())
+               .in(operLog.getBusinessTypes() != null && operLog.getBusinessTypes().length > 0, SysOperLog::getBusinessType, Arrays.asList(operLog.getBusinessTypes()))
+               .eq(operLog.getStatus() != null, SysOperLog::getStatus, operLog.getStatus())
+               .like(StringUtils.isNotEmpty(operLog.getOperName()), SysOperLog::getOperName, operLog.getOperName())
+               .orderByDesc(SysOperLog::getOperTime);
+        // 时间范围查询
+        Map<String, Object> params = operLog.getParams();
+        if (params != null && params.containsKey("beginTime"))
+        {
+            wrapper.apply("date_format(oper_time,'%Y%m%d') >= date_format({0},'%Y%m%d')", params.get("beginTime"));
+        }
+        if (params != null && params.containsKey("endTime"))
+        {
+            wrapper.apply("date_format(oper_time,'%Y%m%d') <= date_format({0},'%Y%m%d')", params.get("endTime"));
+        }
+        return operLogMapper.selectList(wrapper);
     }
 
     /**
@@ -72,6 +92,6 @@ public class SysOperLogServiceImpl implements ISysOperLogService
     @Override
     public void cleanOperLog()
     {
-        operLogMapper.cleanOperLog();
+        operLogMapper.delete(new LambdaQueryWrapper<>());
     }
 }

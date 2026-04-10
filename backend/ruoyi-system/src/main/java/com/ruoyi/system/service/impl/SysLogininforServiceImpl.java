@@ -2,7 +2,10 @@ package com.ruoyi.system.service.impl;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import org.springframework.stereotype.Service;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysLogininfor;
 import com.ruoyi.system.mapper.SysLogininforMapper;
 import com.ruoyi.system.service.ISysLogininforService;
@@ -40,7 +43,22 @@ public class SysLogininforServiceImpl implements ISysLogininforService
     @Override
     public List<SysLogininfor> selectLogininforList(SysLogininfor logininfor)
     {
-        return logininforMapper.selectLogininforList(logininfor);
+        LambdaQueryWrapper<SysLogininfor> wrapper = new LambdaQueryWrapper<>();
+        wrapper.like(StringUtils.isNotEmpty(logininfor.getUserName()), SysLogininfor::getUserName, logininfor.getUserName())
+               .eq(StringUtils.isNotEmpty(logininfor.getStatus()), SysLogininfor::getStatus, logininfor.getStatus())
+               .like(StringUtils.isNotEmpty(logininfor.getIpaddr()), SysLogininfor::getIpaddr, logininfor.getIpaddr())
+               .orderByDesc(SysLogininfor::getLoginTime);
+        // 时间范围查询
+        Map<String, Object> params = logininfor.getParams();
+        if (params != null && params.containsKey("beginTime"))
+        {
+            wrapper.apply("date_format(login_time,'%Y%m%d') >= date_format({0},'%Y%m%d')", params.get("beginTime"));
+        }
+        if (params != null && params.containsKey("endTime"))
+        {
+            wrapper.apply("date_format(login_time,'%Y%m%d') <= date_format({0},'%Y%m%d')", params.get("endTime"));
+        }
+        return logininforMapper.selectList(wrapper);
     }
 
     /**
@@ -61,6 +79,6 @@ public class SysLogininforServiceImpl implements ISysLogininforService
     @Override
     public void cleanLogininfor()
     {
-        logininforMapper.cleanLogininfor();
+        logininforMapper.delete(new LambdaQueryWrapper<>());
     }
 }

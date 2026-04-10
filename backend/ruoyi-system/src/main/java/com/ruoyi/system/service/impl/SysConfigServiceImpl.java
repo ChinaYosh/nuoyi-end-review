@@ -2,6 +2,7 @@ package com.ruoyi.system.service.impl;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -100,7 +101,21 @@ public class SysConfigServiceImpl implements ISysConfigService
     @Override
     public List<SysConfig> selectConfigList(SysConfig config)
     {
-        return configMapper.selectConfigList(config);
+        LambdaQueryWrapper<SysConfig> wrapper = new LambdaQueryWrapper<>();
+        wrapper.like(StringUtils.isNotEmpty(config.getConfigName()), SysConfig::getConfigName, config.getConfigName())
+               .eq(StringUtils.isNotEmpty(config.getConfigType()), SysConfig::getConfigType, config.getConfigType())
+               .like(StringUtils.isNotEmpty(config.getConfigKey()), SysConfig::getConfigKey, config.getConfigKey());
+        // 时间范围查询
+        Map<String, Object> params = config.getParams();
+        if (params != null && params.containsKey("beginTime"))
+        {
+            wrapper.apply("date_format(create_time,'%Y%m%d') >= date_format({0},'%Y%m%d')", params.get("beginTime"));
+        }
+        if (params != null && params.containsKey("endTime"))
+        {
+            wrapper.apply("date_format(create_time,'%Y%m%d') <= date_format({0},'%Y%m%d')", params.get("endTime"));
+        }
+        return configMapper.selectList(wrapper);
     }
 
     /**
@@ -169,7 +184,7 @@ public class SysConfigServiceImpl implements ISysConfigService
     @Override
     public void loadingConfigCache()
     {
-        List<SysConfig> configsList = configMapper.selectConfigList(new SysConfig());
+        List<SysConfig> configsList = configMapper.selectList(new LambdaQueryWrapper<>());
         for (SysConfig config : configsList)
         {
             redisCache.setCacheObject(getCacheKey(config.getConfigKey()), config.getConfigValue());
@@ -206,7 +221,9 @@ public class SysConfigServiceImpl implements ISysConfigService
     public boolean checkConfigKeyUnique(SysConfig config)
     {
         Long configId = StringUtils.isNull(config.getConfigId()) ? -1L : config.getConfigId();
-        SysConfig info = configMapper.checkConfigKeyUnique(config.getConfigKey());
+        SysConfig info = configMapper.selectOne(
+            new LambdaQueryWrapper<SysConfig>().eq(SysConfig::getConfigKey, config.getConfigKey()).last("limit 1")
+        );
         if (StringUtils.isNotNull(info) && info.getConfigId().longValue() != configId.longValue())
         {
             return UserConstants.NOT_UNIQUE;

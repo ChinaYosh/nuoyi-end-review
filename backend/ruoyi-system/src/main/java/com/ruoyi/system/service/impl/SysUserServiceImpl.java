@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.entity.SysRole;
@@ -166,7 +167,11 @@ public class SysUserServiceImpl implements ISysUserService
     public boolean checkUserNameUnique(SysUser user)
     {
         Long userId = StringUtils.isNull(user.getUserId()) ? -1L : user.getUserId();
-        SysUser info = userMapper.checkUserNameUnique(user.getUserName());
+        SysUser info = userMapper.selectOne(
+            new LambdaQueryWrapper<SysUser>()
+                .eq(SysUser::getUserName, user.getUserName())
+                .last("limit 1")
+        );
         if (StringUtils.isNotNull(info) && info.getUserId().longValue() != userId.longValue())
         {
             return UserConstants.NOT_UNIQUE;
@@ -184,7 +189,11 @@ public class SysUserServiceImpl implements ISysUserService
     public boolean checkPhoneUnique(SysUser user)
     {
         Long userId = StringUtils.isNull(user.getUserId()) ? -1L : user.getUserId();
-        SysUser info = userMapper.checkPhoneUnique(user.getPhonenumber());
+        SysUser info = userMapper.selectOne(
+            new LambdaQueryWrapper<SysUser>()
+                .eq(SysUser::getPhonenumber, user.getPhonenumber())
+                .last("limit 1")
+        );
         if (StringUtils.isNotNull(info) && info.getUserId().longValue() != userId.longValue())
         {
             return UserConstants.NOT_UNIQUE;
@@ -202,7 +211,11 @@ public class SysUserServiceImpl implements ISysUserService
     public boolean checkEmailUnique(SysUser user)
     {
         Long userId = StringUtils.isNull(user.getUserId()) ? -1L : user.getUserId();
-        SysUser info = userMapper.checkEmailUnique(user.getEmail());
+        SysUser info = userMapper.selectOne(
+            new LambdaQueryWrapper<SysUser>()
+                .eq(SysUser::getEmail, user.getEmail())
+                .last("limit 1")
+        );
         if (StringUtils.isNotNull(info) && info.getUserId().longValue() != userId.longValue())
         {
             return UserConstants.NOT_UNIQUE;

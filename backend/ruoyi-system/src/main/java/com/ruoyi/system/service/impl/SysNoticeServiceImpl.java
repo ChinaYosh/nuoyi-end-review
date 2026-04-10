@@ -3,6 +3,8 @@ package com.ruoyi.system.service.impl;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysNotice;
 import com.ruoyi.system.mapper.SysNoticeMapper;
 import com.ruoyi.system.service.ISysNoticeService;
@@ -40,7 +42,12 @@ public class SysNoticeServiceImpl implements ISysNoticeService
     @Override
     public List<SysNotice> selectNoticeList(SysNotice notice)
     {
-        return noticeMapper.selectNoticeList(notice);
+        LambdaQueryWrapper<SysNotice> wrapper = new LambdaQueryWrapper<>();
+        wrapper.like(StringUtils.isNotEmpty(notice.getNoticeTitle()), SysNotice::getNoticeTitle, notice.getNoticeTitle())
+               .like(StringUtils.isNotEmpty(notice.getNoticeType()), SysNotice::getNoticeType, notice.getNoticeType())
+               .eq(StringUtils.isNotEmpty(notice.getStatus()), SysNotice::getStatus, notice.getStatus())
+               .orderByDesc(SysNotice::getCreateTime);
+        return noticeMapper.selectList(wrapper);
     }
 
     /**

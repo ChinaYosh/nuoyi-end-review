@@ -6,7 +6,7 @@
 
     <!-- 父工程信息 -->
     <groupId>com.chinayosh</groupId>
-    <artifactId>aipel-hub</artifactId>
+    <artifactId>local-nuoyi-study</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
     <name>AIPel Hub (RuoYi Aggregator)</name>

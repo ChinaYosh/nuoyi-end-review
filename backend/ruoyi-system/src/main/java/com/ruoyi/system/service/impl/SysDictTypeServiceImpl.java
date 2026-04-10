@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.domain.entity.SysDictType;
@@ -49,7 +50,12 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService
     @Override
     public List<SysDictType> selectDictTypeList(SysDictType dictType)
     {
-        return dictTypeMapper.selectDictTypeList(dictType);
+        LambdaQueryWrapper<SysDictType> wrapper = new LambdaQueryWrapper<>();
+        wrapper.like(StringUtils.isNotEmpty(dictType.getDictName()), SysDictType::getDictName, dictType.getDictName())
+               .like(StringUtils.isNotEmpty(dictType.getDictType()), SysDictType::getDictType, dictType.getDictType())
+               .eq(StringUtils.isNotEmpty(dictType.getStatus()), SysDictType::getStatus, dictType.getStatus())
+               .orderByAsc(SysDictType::getDictId);
+        return dictTypeMapper.selectList(wrapper);
     }
 
     /**
@@ -60,7 +66,7 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService
     @Override
     public List<SysDictType> selectDictTypeAll()
     {
-        return dictTypeMapper.selectDictTypeAll();
+        return dictTypeMapper.selectList(new LambdaQueryWrapper<>());
     }
 
     /**
@@ -77,13 +83,28 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService
         {
             return dictDatas;
         }
-        dictDatas = dictDataMapper.selectDictDataByType(dictType);
+        dictDatas = selectDictDataListByType(dictType);
         if (StringUtils.isNotEmpty(dictDatas))
         {
             DictUtils.setDictCache(dictType, dictDatas);
             return dictDatas;
         }
         return null;
+    }
+
+    /**
+     * 根据字典类型查询字典数据列表
+     * 
+     * @param dictType 字典类型
+     * @return 字典数据集合信息
+     */
+    private List<SysDictData> selectDictDataListByType(String dictType)
+    {
+        LambdaQueryWrapper<SysDictData> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(SysDictData::getStatus, "0")
+               .eq(SysDictData::getDictType, dictType)
+               .orderByAsc(SysDictData::getDictSort);
+        return dictDataMapper.selectList(wrapper);
     }
 
     /**
@@ -107,7 +128,11 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService
     @Override
     public SysDictType selectDictTypeByType(String dictType)
     {
-        return dictTypeMapper.selectDictTypeByType(dictType);
+        return dictTypeMapper.selectOne(
+            new LambdaQueryWrapper<SysDictType>()
+                .eq(SysDictType::getDictType, dictType)
+                .last("limit 1")
+        );
     }
 
     /**
@@ -121,7 +146,7 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService
         for (Long dictId : dictIds)
         {
             SysDictType dictType = selectDictTypeById(dictId);
-            if (dictDataMapper.countDictDataByType(dictType.getDictType()) > 0)
+            if (countDictDataByType(dictType.getDictType()) > 0)
             {
                 throw new ServiceException(String.format("%1$s已分配,不能删除", dictType.getDictName()));
             }
@@ -131,14 +156,27 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService
     }
 
     /**
+     * 根据字典类型查询字典数据数量
+     * 
+     * @param dictType 字典类型
+     * @return 结果
+     */
+    private long countDictDataByType(String dictType)
+    {
+        return dictDataMapper.selectCount(
+            new LambdaQueryWrapper<SysDictData>().eq(SysDictData::getDictType, dictType)
+        );
+    }
+
+    /**
      * 加载字典缓存数据
      */
     @Override
     public void loadingDictCache()
     {
-        SysDictData dictData = new SysDictData();
-        dictData.setStatus("0");
-        Map<String, List<SysDictData>> dictDataMap = dictDataMapper.selectDictDataList(dictData).stream().collect(Collectors.groupingBy(SysDictData::getDictType));
+        LambdaQueryWrapper<SysDictData> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(SysDictData::getStatus, "0");
+        Map<String, List<SysDictData>> dictDataMap = dictDataMapper.selectList(wrapper).stream().collect(Collectors.groupingBy(SysDictData::getDictType));
         for (Map.Entry<String, List<SysDictData>> entry : dictDataMap.entrySet())
         {
             DictUtils.setDictCache(entry.getKey(), entry.getValue().stream().sorted(Comparator.comparing(SysDictData::getDictSort)).collect(Collectors.toList()));
@@ -192,14 +230,29 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService
     public int updateDictType(SysDictType dict)
     {
         SysDictType oldDict = dictTypeMapper.selectById(dict.getDictId());
-        dictDataMapper.updateDictDataType(oldDict.getDictType(), dict.getDictType());
+        updateDictDataType(oldDict.getDictType(), dict.getDictType());
         int row = dictTypeMapper.updateById(dict);
         if (row > 0)
         {
-            List<SysDictData> dictDatas = dictDataMapper.selectDictDataByType(dict.getDictType());
+            List<SysDictData> dictDatas = selectDictDataListByType(dict.getDictType());
             DictUtils.setDictCache(dict.getDictType(), dictDatas);
         }
         return row;
+    }
+
+    /**
+     * 同步修改字典类型
+     * 
+     * @param oldDictType 旧字典类型
+     * @param newDictType 新字典类型
+     */
+    private void updateDictDataType(String oldDictType, String newDictType)
+    {
+        SysDictData dictData = new SysDictData();
+        dictData.setDictType(newDictType);
+        dictDataMapper.update(dictData, 
+            new com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper<SysDictData>()
+                .eq(SysDictData::getDictType, oldDictType));
     }
 
     /**
@@ -212,7 +265,11 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService
     public boolean checkDictTypeUnique(SysDictType dict)
     {
         Long dictId = StringUtils.isNull(dict.getDictId()) ? -1L : dict.getDictId();
-        SysDictType dictType = dictTypeMapper.checkDictTypeUnique(dict.getDictType());
+        SysDictType dictType = dictTypeMapper.selectOne(
+            new LambdaQueryWrapper<SysDictType>()
+                .eq(SysDictType::getDictType, dict.getDictType())
+                .last("limit 1")
+        );
         if (StringUtils.isNotNull(dictType) && dictType.getDictId().longValue() != dictId.longValue())
         {
             return UserConstants.NOT_UNIQUE;
