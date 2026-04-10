@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -21,6 +20,7 @@ import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.mapper.SysDeptMapper;
 import com.ruoyi.system.mapper.SysRoleMapper;
 import com.ruoyi.system.service.ISysDeptService;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 部门管理 服务实现
@@ -28,13 +28,12 @@ import com.ruoyi.system.service.ISysDeptService;
  * @author ruoyi
  */
 @Service
+@RequiredArgsConstructor
 public class SysDeptServiceImpl implements ISysDeptService
 {
-    @Autowired
-    private SysDeptMapper deptMapper;
+    private final SysDeptMapper deptMapper;
 
-    @Autowired
-    private SysRoleMapper roleMapper;
+    private final SysRoleMapper roleMapper;
 
     /**
      * 查询部门管理数据

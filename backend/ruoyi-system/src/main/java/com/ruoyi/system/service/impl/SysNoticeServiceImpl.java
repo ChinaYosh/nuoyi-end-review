@@ -2,11 +2,11 @@ package com.ruoyi.system.service.impl;
 
 import java.util.Arrays;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.domain.SysNotice;
 import com.ruoyi.system.mapper.SysNoticeMapper;
 import com.ruoyi.system.service.ISysNoticeService;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 公告 服务层实现
@@ -14,10 +14,10 @@ import com.ruoyi.system.service.ISysNoticeService;
  * @author ruoyi
  */
 @Service
+@RequiredArgsConstructor
 public class SysNoticeServiceImpl implements ISysNoticeService
 {
-    @Autowired
-    private SysNoticeMapper noticeMapper;
+    private final SysNoticeMapper noticeMapper;
 
     /**
      * 查询公告信息
@@ -88,6 +88,6 @@ public class SysNoticeServiceImpl implements ISysNoticeService
     @Override
     public int deleteNoticeByIds(Long[] noticeIds)
     {
-        return noticeMapper.deleteBatchIds(Arrays.asList(noticeIds));
+        return noticeMapper.deleteByIds(Arrays.asList(noticeIds));
     }
 }

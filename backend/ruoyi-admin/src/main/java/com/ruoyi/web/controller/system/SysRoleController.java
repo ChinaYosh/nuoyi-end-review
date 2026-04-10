@@ -2,7 +2,6 @@ package com.ruoyi.web.controller.system;
 
 import java.util.List;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,6 +29,7 @@ import com.ruoyi.system.domain.SysUserRole;
 import com.ruoyi.system.service.ISysDeptService;
 import com.ruoyi.system.service.ISysRoleService;
 import com.ruoyi.system.service.ISysUserService;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 角色信息
@@ -38,22 +38,18 @@ import com.ruoyi.system.service.ISysUserService;
  */
 @RestController
 @RequestMapping("/system/role")
+@RequiredArgsConstructor
 public class SysRoleController extends BaseController
 {
-    @Autowired
-    private ISysRoleService roleService;
+    private final ISysRoleService roleService;
 
-    @Autowired
-    private TokenService tokenService;
+    private final TokenService tokenService;
 
-    @Autowired
-    private SysPermissionService permissionService;
+    private final SysPermissionService permissionService;
 
-    @Autowired
-    private ISysUserService userService;
+    private final ISysUserService userService;
 
-    @Autowired
-    private ISysDeptService deptService;
+    private final ISysDeptService deptService;
 
     @PreAuthorize("@ss.hasPermi('system:role:list')")
     @GetMapping("/list")

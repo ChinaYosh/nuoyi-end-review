@@ -1,7 +1,6 @@
 package com.ruoyi.framework.config;
 
 import java.util.concurrent.TimeUnit;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.CacheControl;
@@ -14,6 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.ruoyi.common.config.RuoYiConfig;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.framework.interceptor.RepeatSubmitInterceptor;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 通用配置
@@ -21,10 +21,10 @@ import com.ruoyi.framework.interceptor.RepeatSubmitInterceptor;
  * @author ruoyi
  */
 @Configuration
+@RequiredArgsConstructor
 public class ResourcesConfig implements WebMvcConfigurer
 {
-    @Autowired
-    private RepeatSubmitInterceptor repeatSubmitInterceptor;
+    private final RepeatSubmitInterceptor repeatSubmitInterceptor;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry)

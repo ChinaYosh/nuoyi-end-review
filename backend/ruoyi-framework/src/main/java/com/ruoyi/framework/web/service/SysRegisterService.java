@@ -1,6 +1,5 @@
 package com.ruoyi.framework.web.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.constant.Constants;
@@ -18,6 +17,7 @@ import com.ruoyi.framework.manager.AsyncManager;
 import com.ruoyi.framework.manager.factory.AsyncFactory;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysUserService;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 注册校验方法
@@ -25,16 +25,14 @@ import com.ruoyi.system.service.ISysUserService;
  * @author ruoyi
  */
 @Component
+@RequiredArgsConstructor
 public class SysRegisterService
 {
-    @Autowired
-    private ISysUserService userService;
+    private final ISysUserService userService;
 
-    @Autowired
-    private ISysConfigService configService;
+    private final ISysConfigService configService;
 
-    @Autowired
-    private RedisCache redisCache;
+    private final RedisCache redisCache;
 
     /**
      * 注册

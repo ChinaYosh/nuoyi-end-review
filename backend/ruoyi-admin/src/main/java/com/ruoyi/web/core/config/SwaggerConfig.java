@@ -1,9 +1,9 @@
 package com.ruoyi.web.core.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.ruoyi.common.config.RuoYiConfig;
+import lombok.RequiredArgsConstructor;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
@@ -18,11 +18,11 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
  * @author ruoyi
  */
 @Configuration
+@RequiredArgsConstructor
 public class SwaggerConfig
 {
     /** 系统基础配置 */
-    @Autowired
-    private RuoYiConfig ruoyiConfig;
+    private final RuoYiConfig ruoyiConfig;
     
     /**
      * 自定义 OpenAPI 对象

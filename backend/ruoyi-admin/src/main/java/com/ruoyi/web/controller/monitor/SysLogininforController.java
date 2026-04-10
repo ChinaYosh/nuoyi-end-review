@@ -2,7 +2,6 @@ package com.ruoyi.web.controller.monitor;
 
 import java.util.List;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +18,7 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.service.SysPasswordService;
 import com.ruoyi.system.domain.SysLogininfor;
 import com.ruoyi.system.service.ISysLogininforService;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 系统访问记录
@@ -27,13 +27,12 @@ import com.ruoyi.system.service.ISysLogininforService;
  */
 @RestController
 @RequestMapping("/monitor/logininfor")
+@RequiredArgsConstructor
 public class SysLogininforController extends BaseController
 {
-    @Autowired
-    private ISysLogininforService logininforService;
+    private final ISysLogininforService logininforService;
 
-    @Autowired
-    private SysPasswordService passwordService;
+    private final SysPasswordService passwordService;
 
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:list')")
     @GetMapping("/list")

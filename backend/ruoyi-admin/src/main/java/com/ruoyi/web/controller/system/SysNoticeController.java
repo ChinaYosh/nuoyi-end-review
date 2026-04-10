@@ -1,7 +1,6 @@
 package com.ruoyi.web.controller.system;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +21,7 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.system.domain.SysNotice;
 import com.ruoyi.system.service.ISysNoticeReadService;
 import com.ruoyi.system.service.ISysNoticeService;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 公告 信息操作处理
@@ -30,13 +30,12 @@ import com.ruoyi.system.service.ISysNoticeService;
  */
 @RestController
 @RequestMapping("/system/notice")
+@RequiredArgsConstructor
 public class SysNoticeController extends BaseController
 {
-    @Autowired
-    private ISysNoticeService noticeService;
+    private final ISysNoticeService noticeService;
 
-    @Autowired
-    private ISysNoticeReadService noticeReadService;
+    private final ISysNoticeReadService noticeReadService;
 
     /**
      * 获取通知公告列表
@@ -93,7 +92,7 @@ public class SysNoticeController extends BaseController
     {
         Long userId = getUserId();
         List<SysNotice> list = noticeReadService.selectNoticeListWithReadStatus(userId, 5);
-        long unreadCount = list.stream().filter(n -> !n.getIsRead()).count();
+        long unreadCount = list.stream().filter(n -> !n.isRead()).count();
         AjaxResult result = AjaxResult.success(list);
         result.put("unreadCount", unreadCount);
         return result;

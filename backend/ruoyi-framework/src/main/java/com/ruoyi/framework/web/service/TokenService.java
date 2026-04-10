@@ -6,9 +6,9 @@ import java.util.concurrent.TimeUnit;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import lombok.RequiredArgsConstructor;
 import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.model.LoginUser;
@@ -29,6 +29,7 @@ import io.jsonwebtoken.security.Keys;
  * @author ruoyi
  */
 @Component
+@RequiredArgsConstructor
 public class TokenService
 {
     private static final Logger log = LoggerFactory.getLogger(TokenService.class);
@@ -51,8 +52,7 @@ public class TokenService
 
     private static final Long MILLIS_MINUTE_TWENTY = 20 * 60 * 1000L;
 
-    @Autowired
-    private RedisCache redisCache;
+    private final RedisCache redisCache;
 
     /**
      * 获取用户身份信息

@@ -3,7 +3,6 @@ package com.ruoyi.system.service.impl;
 import java.util.Collection;
 import java.util.List;
 import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ruoyi.common.constant.CacheConstants;
@@ -15,6 +14,7 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysConfig;
 import com.ruoyi.system.mapper.SysConfigMapper;
 import com.ruoyi.system.service.ISysConfigService;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 参数配置 服务层实现
@@ -22,13 +22,12 @@ import com.ruoyi.system.service.ISysConfigService;
  * @author ruoyi
  */
 @Service
+@RequiredArgsConstructor
 public class SysConfigServiceImpl implements ISysConfigService
 {
-    @Autowired
-    private SysConfigMapper configMapper;
+    private final SysConfigMapper configMapper;
 
-    @Autowired
-    private RedisCache redisCache;
+    private final RedisCache redisCache;
 
     /**
      * 项目启动时，初始化参数到缓存

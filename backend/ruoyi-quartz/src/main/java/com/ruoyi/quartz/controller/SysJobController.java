@@ -3,7 +3,6 @@ package com.ruoyi.quartz.controller;
 import java.util.List;
 import jakarta.servlet.http.HttpServletResponse;
 import org.quartz.SchedulerException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +28,7 @@ import com.ruoyi.quartz.util.ScheduleUtils;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 调度任务信息操作处理
@@ -38,10 +38,10 @@ import io.swagger.v3.oas.annotations.Operation;
 @Tag(name = "定时任务管理")
 @RestController
 @RequestMapping("/monitor/job")
+@RequiredArgsConstructor
 public class SysJobController extends BaseController
 {
-    @Autowired
-    private ISysJobService jobService;
+    private final ISysJobService jobService;
 
     /**
      * 查询定时任务列表

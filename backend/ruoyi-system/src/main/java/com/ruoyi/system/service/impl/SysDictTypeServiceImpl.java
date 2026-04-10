@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.ruoyi.common.constant.UserConstants;
@@ -17,6 +16,7 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.mapper.SysDictDataMapper;
 import com.ruoyi.system.mapper.SysDictTypeMapper;
 import com.ruoyi.system.service.ISysDictTypeService;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 字典 业务层处理
@@ -24,13 +24,12 @@ import com.ruoyi.system.service.ISysDictTypeService;
  * @author ruoyi
  */
 @Service
+@RequiredArgsConstructor
 public class SysDictTypeServiceImpl implements ISysDictTypeService
 {
-    @Autowired
-    private SysDictTypeMapper dictTypeMapper;
+    private final SysDictTypeMapper dictTypeMapper;
 
-    @Autowired
-    private SysDictDataMapper dictDataMapper;
+    private final SysDictDataMapper dictDataMapper;
 
     /**
      * 项目启动时，初始化字典到缓存

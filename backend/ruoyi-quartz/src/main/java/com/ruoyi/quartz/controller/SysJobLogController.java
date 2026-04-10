@@ -2,7 +2,6 @@ package com.ruoyi.quartz.controller;
 
 import java.util.List;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +19,7 @@ import com.ruoyi.quartz.domain.SysJobLog;
 import com.ruoyi.quartz.service.ISysJobLogService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 调度日志操作处理
@@ -29,10 +29,10 @@ import io.swagger.v3.oas.annotations.Operation;
 @Tag(name = "定时任务日志管理")
 @RestController
 @RequestMapping("/monitor/jobLog")
+@RequiredArgsConstructor
 public class SysJobLogController extends BaseController
 {
-    @Autowired
-    private ISysJobLogService jobLogService;
+    private final ISysJobLogService jobLogService;
 
     /**
      * 查询定时任务调度日志列表

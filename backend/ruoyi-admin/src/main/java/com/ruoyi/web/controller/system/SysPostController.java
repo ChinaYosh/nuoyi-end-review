@@ -2,7 +2,6 @@ package com.ruoyi.web.controller.system;
 
 import java.util.List;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,6 +20,7 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.domain.SysPost;
 import com.ruoyi.system.service.ISysPostService;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 岗位信息操作处理
@@ -29,10 +29,10 @@ import com.ruoyi.system.service.ISysPostService;
  */
 @RestController
 @RequestMapping("/system/post")
+@RequiredArgsConstructor
 public class SysPostController extends BaseController
 {
-    @Autowired
-    private ISysPostService postService;
+    private final ISysPostService postService;
 
     /**
      * 获取岗位列表

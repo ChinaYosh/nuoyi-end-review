@@ -6,7 +6,6 @@ import java.util.concurrent.TimeUnit;
 import jakarta.annotation.Resource;
 import javax.imageio.ImageIO;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FastByteArrayOutputStream;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +18,7 @@ import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.sign.Base64;
 import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.system.service.ISysConfigService;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 验证码操作处理
@@ -26,6 +26,7 @@ import com.ruoyi.system.service.ISysConfigService;
  * @author ruoyi
  */
 @RestController
+@RequiredArgsConstructor
 public class CaptchaController
 {
     @Resource(name = "captchaProducer")
@@ -34,11 +35,9 @@ public class CaptchaController
     @Resource(name = "captchaProducerMath")
     private Producer captchaProducerMath;
 
-    @Autowired
-    private RedisCache redisCache;
+    private final RedisCache redisCache;
     
-    @Autowired
-    private ISysConfigService configService;
+    private final ISysConfigService configService;
     /**
      * 生成验证码
      */

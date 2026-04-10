@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +20,7 @@ import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysCache;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 缓存监控
@@ -29,10 +29,10 @@ import com.ruoyi.system.domain.SysCache;
  */
 @RestController
 @RequestMapping("/monitor/cache")
+@RequiredArgsConstructor
 public class CacheController
 {
-    @Autowired
-    private RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
 
     private final static List<SysCache> caches = new ArrayList<SysCache>();
     {

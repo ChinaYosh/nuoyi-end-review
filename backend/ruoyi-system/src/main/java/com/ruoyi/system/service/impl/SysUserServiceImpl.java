@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import jakarta.validation.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -31,6 +30,7 @@ import com.ruoyi.system.mapper.SysUserRoleMapper;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysDeptService;
 import com.ruoyi.system.service.ISysUserService;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 用户 业务层处理
@@ -38,33 +38,26 @@ import com.ruoyi.system.service.ISysUserService;
  * @author ruoyi
  */
 @Service
+@RequiredArgsConstructor
 public class SysUserServiceImpl implements ISysUserService
 {
     private static final Logger log = LoggerFactory.getLogger(SysUserServiceImpl.class);
 
-    @Autowired
-    private SysUserMapper userMapper;
+    private final SysUserMapper userMapper;
 
-    @Autowired
-    private SysRoleMapper roleMapper;
+    private final SysRoleMapper roleMapper;
 
-    @Autowired
-    private SysPostMapper postMapper;
+    private final SysPostMapper postMapper;
 
-    @Autowired
-    private SysUserRoleMapper userRoleMapper;
+    private final SysUserRoleMapper userRoleMapper;
 
-    @Autowired
-    private SysUserPostMapper userPostMapper;
+    private final SysUserPostMapper userPostMapper;
 
-    @Autowired
-    private ISysConfigService configService;
+    private final ISysConfigService configService;
 
-    @Autowired
-    private ISysDeptService deptService;
+    private final ISysDeptService deptService;
 
-    @Autowired
-    protected Validator validator;
+    protected final Validator validator;
 
     /**
      * 根据条件分页查询用户列表
@@ -363,6 +356,7 @@ public class SysUserServiceImpl implements ISysUserService
      * @param loginDate 登录时间
      * @return 结果
      */
+    @Override
     public void updateLoginInfo(Long userId, String loginIp, Date loginDate)
     {
         userMapper.updateLoginInfo(userId, loginIp, loginDate);
@@ -478,7 +472,8 @@ public class SysUserServiceImpl implements ISysUserService
     {
         for (Long userId : userIds)
         {
-            checkUserAllowed(new SysUser(userId));
+            SysUser user = selectUserById(userId);
+            checkUserAllowed(user);
             checkUserDataScope(userId);
         }
         // 删除用户与角色关联

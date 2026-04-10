@@ -1,6 +1,5 @@
 package com.ruoyi.framework.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -18,6 +17,7 @@ import com.ruoyi.framework.config.properties.PermitAllUrlProperties;
 import com.ruoyi.framework.security.filter.JwtAuthenticationTokenFilter;
 import com.ruoyi.framework.security.handle.AuthenticationEntryPointImpl;
 import com.ruoyi.framework.security.handle.LogoutSuccessHandlerImpl;
+import lombok.RequiredArgsConstructor;
 
 /**
  * spring security配置
@@ -26,37 +26,33 @@ import com.ruoyi.framework.security.handle.LogoutSuccessHandlerImpl;
  */
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true)
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig
 {
     /**
      * 认证失败处理类
      */
-    @Autowired
-    private AuthenticationEntryPointImpl unauthorizedHandler;
+    private final AuthenticationEntryPointImpl unauthorizedHandler;
 
     /**
      * 退出处理类
      */
-    @Autowired
-    private LogoutSuccessHandlerImpl logoutSuccessHandler;
+    private final LogoutSuccessHandlerImpl logoutSuccessHandler;
 
     /**
      * token认证过滤器
      */
-    @Autowired
-    private JwtAuthenticationTokenFilter authenticationTokenFilter;
-    
+    private final JwtAuthenticationTokenFilter authenticationTokenFilter;
+
     /**
      * 跨域过滤器
      */
-    @Autowired
-    private CorsFilter corsFilter;
+    private final CorsFilter corsFilter;
 
     /**
      * 允许匿名访问的地址
      */
-    @Autowired
-    private PermitAllUrlProperties permitAllUrl;
+    private final PermitAllUrlProperties permitAllUrl;
 
 	/**
 	 * 身份验证实现

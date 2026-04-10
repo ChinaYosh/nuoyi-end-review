@@ -1,7 +1,6 @@
 package com.ruoyi.framework.web.service;
 
 import java.util.concurrent.TimeUnit;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -12,6 +11,7 @@ import com.ruoyi.common.exception.user.UserPasswordNotMatchException;
 import com.ruoyi.common.exception.user.UserPasswordRetryLimitExceedException;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.framework.security.context.AuthenticationContextHolder;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 登录密码方法
@@ -19,10 +19,10 @@ import com.ruoyi.framework.security.context.AuthenticationContextHolder;
  * @author ruoyi
  */
 @Component
+@RequiredArgsConstructor
 public class SysPasswordService
 {
-    @Autowired
-    private RedisCache redisCache;
+    private final RedisCache redisCache;
 
     @Value(value = "${user.password.maxRetryCount}")
     private int maxRetryCount;

@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -24,6 +23,7 @@ import com.ruoyi.system.mapper.SysRoleMapper;
 import com.ruoyi.system.mapper.SysRoleMenuMapper;
 import com.ruoyi.system.mapper.SysUserRoleMapper;
 import com.ruoyi.system.service.ISysRoleService;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 角色 业务层处理
@@ -31,19 +31,16 @@ import com.ruoyi.system.service.ISysRoleService;
  * @author ruoyi
  */
 @Service
+@RequiredArgsConstructor
 public class SysRoleServiceImpl implements ISysRoleService
 {
-    @Autowired
-    private SysRoleMapper roleMapper;
+    private final SysRoleMapper roleMapper;
 
-    @Autowired
-    private SysRoleMenuMapper roleMenuMapper;
+    private final SysRoleMenuMapper roleMenuMapper;
 
-    @Autowired
-    private SysUserRoleMapper userRoleMapper;
+    private final SysUserRoleMapper userRoleMapper;
 
-    @Autowired
-    private SysRoleDeptMapper roleDeptMapper;
+    private final SysRoleDeptMapper roleDeptMapper;
 
     /**
      * 根据条件分页查询角色数据
@@ -363,9 +360,9 @@ public class SysRoleServiceImpl implements ISysRoleService
     {
         for (Long roleId : roleIds)
         {
-            checkRoleAllowed(new SysRole(roleId));
-            checkRoleDataScope(roleId);
             SysRole role = selectRoleById(roleId);
+            checkRoleAllowed(role);
+            checkRoleDataScope(roleId);
             if (countUserRoleByRoleId(roleId) > 0)
             {
                 throw new ServiceException(String.format("%1$s已分配,不能删除", role.getRoleName()));
@@ -375,7 +372,7 @@ public class SysRoleServiceImpl implements ISysRoleService
         roleMenuMapper.deleteRoleMenu(roleIds);
         // 删除角色与部门关联
         roleDeptMapper.deleteRoleDept(roleIds);
-        return roleMapper.deleteBatchIds(Arrays.asList(roleIds));
+        return roleMapper.deleteByIds(Arrays.asList(roleIds));
     }
 
     /**

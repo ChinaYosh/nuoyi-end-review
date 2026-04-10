@@ -2,7 +2,6 @@ package com.ruoyi.web.controller.system;
 
 import java.util.List;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,6 +20,7 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.domain.SysConfig;
 import com.ruoyi.system.service.ISysConfigService;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 参数配置 信息操作处理
@@ -29,10 +29,10 @@ import com.ruoyi.system.service.ISysConfigService;
  */
 @RestController
 @RequestMapping("/system/config")
+@RequiredArgsConstructor
 public class SysConfigController extends BaseController
 {
-    @Autowired
-    private ISysConfigService configService;
+    private final ISysConfigService configService;
 
     /**
      * 获取参数配置列表

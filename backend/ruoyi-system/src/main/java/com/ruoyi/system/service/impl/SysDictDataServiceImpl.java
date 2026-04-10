@@ -1,12 +1,12 @@
 package com.ruoyi.system.service.impl;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.utils.DictUtils;
 import com.ruoyi.system.mapper.SysDictDataMapper;
 import com.ruoyi.system.service.ISysDictDataService;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 字典 业务层处理
@@ -14,10 +14,10 @@ import com.ruoyi.system.service.ISysDictDataService;
  * @author ruoyi
  */
 @Service
+@RequiredArgsConstructor
 public class SysDictDataServiceImpl implements ISysDictDataService
 {
-    @Autowired
-    private SysDictDataMapper dictDataMapper;
+    private final SysDictDataMapper dictDataMapper;
 
     /**
      * 根据条件分页查询字典数据

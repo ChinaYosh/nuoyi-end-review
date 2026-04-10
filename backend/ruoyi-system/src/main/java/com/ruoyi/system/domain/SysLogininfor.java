@@ -3,6 +3,7 @@ package com.ruoyi.system.domain;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -62,4 +63,17 @@ public class SysLogininfor extends BaseEntity
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "访问时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date loginTime;
+
+    /** BaseEntity继承字段在当前表不存在 */
+    @TableField(exist = false)
+    private String createBy;
+
+    @TableField(exist = false)
+    private Date createTime;
+
+    @TableField(exist = false)
+    private String updateBy;
+
+    @TableField(exist = false)
+    private Date updateTime;
 }

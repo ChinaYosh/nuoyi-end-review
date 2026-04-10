@@ -1,12 +1,12 @@
 package com.ruoyi.system.service.impl;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.domain.SysNoticeRead;
 import com.ruoyi.system.domain.SysNotice;
 import com.ruoyi.system.mapper.SysNoticeReadMapper;
 import com.ruoyi.system.service.ISysNoticeReadService;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 公告已读记录 服务层实现
@@ -14,10 +14,10 @@ import com.ruoyi.system.service.ISysNoticeReadService;
  * @author ruoyi
  */
 @Service
+@RequiredArgsConstructor
 public class SysNoticeReadServiceImpl implements ISysNoticeReadService
 {
-    @Autowired
-    private SysNoticeReadMapper noticeReadMapper;
+    private final SysNoticeReadMapper noticeReadMapper;
 
     /**
      * 标记已读

@@ -1,7 +1,6 @@
 package com.ruoyi.web.controller.system;
 
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +11,7 @@ import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.service.ISysUserService;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 首页
@@ -19,14 +19,13 @@ import com.ruoyi.system.service.ISysUserService;
  * @author ruoyi
  */
 @RestController
+@RequiredArgsConstructor
 public class SysIndexController
 {
     /** 系统基础配置 */
-    @Autowired
-    private RuoYiConfig ruoyiConfig;
+    private final RuoYiConfig ruoyiConfig;
 
-    @Autowired
-    private ISysUserService userService;
+    private final ISysUserService userService;
 
     /**
      * 访问首页，提示语

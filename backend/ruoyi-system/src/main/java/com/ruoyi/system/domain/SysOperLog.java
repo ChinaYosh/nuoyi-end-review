@@ -98,4 +98,17 @@ public class SysOperLog extends BaseEntity
     /** 消耗时间 */
     @Excel(name = "消耗时间", suffix = "毫秒")
     private Long costTime;
+
+    /** BaseEntity继承字段在当前表不存在 */
+    @TableField(exist = false)
+    private String createBy;
+
+    @TableField(exist = false)
+    private Date createTime;
+
+    @TableField(exist = false)
+    private String updateBy;
+
+    @TableField(exist = false)
+    private Date updateTime;
 }

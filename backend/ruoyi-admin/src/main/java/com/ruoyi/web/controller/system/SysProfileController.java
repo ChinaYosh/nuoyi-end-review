@@ -1,7 +1,6 @@
 package com.ruoyi.web.controller.system;
 
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -25,6 +24,7 @@ import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.common.utils.file.MimeTypeUtils;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.service.ISysUserService;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 个人信息 业务处理
@@ -33,13 +33,12 @@ import com.ruoyi.system.service.ISysUserService;
  */
 @RestController
 @RequestMapping("/system/user/profile")
+@RequiredArgsConstructor
 public class SysProfileController extends BaseController
 {
-    @Autowired
-    private ISysUserService userService;
+    private final ISysUserService userService;
 
-    @Autowired
-    private TokenService tokenService;
+    private final TokenService tokenService;
 
     /**
      * 个人信息

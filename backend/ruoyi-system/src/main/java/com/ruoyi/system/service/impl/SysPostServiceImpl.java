@@ -2,7 +2,6 @@ package com.ruoyi.system.service.impl;
 
 import java.util.Arrays;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.exception.ServiceException;
@@ -11,6 +10,7 @@ import com.ruoyi.system.domain.SysPost;
 import com.ruoyi.system.mapper.SysPostMapper;
 import com.ruoyi.system.mapper.SysUserPostMapper;
 import com.ruoyi.system.service.ISysPostService;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 岗位信息 服务层处理
@@ -18,13 +18,12 @@ import com.ruoyi.system.service.ISysPostService;
  * @author ruoyi
  */
 @Service
+@RequiredArgsConstructor
 public class SysPostServiceImpl implements ISysPostService
 {
-    @Autowired
-    private SysPostMapper postMapper;
+    private final SysPostMapper postMapper;
 
-    @Autowired
-    private SysUserPostMapper userPostMapper;
+    private final SysUserPostMapper userPostMapper;
 
     /**
      * 查询岗位信息集合
@@ -150,7 +149,7 @@ public class SysPostServiceImpl implements ISysPostService
                 throw new ServiceException(String.format("%1$s已分配,不能删除", post.getPostName()));
             }
         }
-        return postMapper.deleteBatchIds(Arrays.asList(postIds));
+        return postMapper.deleteByIds(Arrays.asList(postIds));
     }
 
     /**

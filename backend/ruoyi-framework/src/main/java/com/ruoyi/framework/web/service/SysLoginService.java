@@ -1,7 +1,6 @@
 package com.ruoyi.framework.web.service;
 
 import jakarta.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,6 +26,7 @@ import com.ruoyi.framework.manager.factory.AsyncFactory;
 import com.ruoyi.framework.security.context.AuthenticationContextHolder;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysUserService;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 登录校验方法
@@ -34,22 +34,19 @@ import com.ruoyi.system.service.ISysUserService;
  * @author ruoyi
  */
 @Component
+@RequiredArgsConstructor
 public class SysLoginService
 {
-    @Autowired
-    private TokenService tokenService;
+    private final TokenService tokenService;
 
     @Resource
     private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private RedisCache redisCache;
-    
-    @Autowired
-    private ISysUserService userService;
+    private final RedisCache redisCache;
 
-    @Autowired
-    private ISysConfigService configService;
+    private final ISysUserService userService;
+
+    private final ISysConfigService configService;
 
     /**
      * 登录验证

@@ -5,7 +5,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -15,6 +14,7 @@ import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.web.service.TokenService;
+import lombok.RequiredArgsConstructor;
 
 /**
  * token过滤器 验证token有效性
@@ -22,10 +22,10 @@ import com.ruoyi.framework.web.service.TokenService;
  * @author ruoyi
  */
 @Component
+@RequiredArgsConstructor
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter
 {
-    @Autowired
-    private TokenService tokenService;
+    private final TokenService tokenService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)

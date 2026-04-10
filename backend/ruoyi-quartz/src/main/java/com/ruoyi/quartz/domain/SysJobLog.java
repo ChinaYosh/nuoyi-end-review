@@ -2,6 +2,7 @@ package com.ruoyi.quartz.domain;
 
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
@@ -55,4 +56,17 @@ public class SysJobLog extends BaseEntity
     /** 结束时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date endTime;
+
+    /** BaseEntity继承字段在当前表不存在 */
+    @TableField(exist = false)
+    private String createBy;
+
+    @TableField(exist = false)
+    private Date createTime;
+
+    @TableField(exist = false)
+    private String updateBy;
+
+    @TableField(exist = false)
+    private Date updateTime;
 }
