@@ -45,7 +45,7 @@ public class SysOperLogServiceImpl implements ISysOperLogService
         LambdaQueryWrapper<SysOperLog> wrapper = new LambdaQueryWrapper<>();
         wrapper.like(StringUtils.isNotEmpty(operLog.getTitle()), SysOperLog::getTitle, operLog.getTitle())
                .eq(operLog.getBusinessType() != null && operLog.getBusinessType() > 0, SysOperLog::getBusinessType, operLog.getBusinessType())
-               .in(operLog.getBusinessTypes() != null && operLog.getBusinessTypes().length > 0, SysOperLog::getBusinessType, Arrays.asList(operLog.getBusinessTypes()))
+               .in(operLog.getBusinessTypes() != null && operLog.getBusinessTypes().length > 0, SysOperLog::getBusinessType, operLog.getBusinessTypes() != null ? Arrays.asList(operLog.getBusinessTypes()) : null)
                .eq(operLog.getStatus() != null, SysOperLog::getStatus, operLog.getStatus())
                .like(StringUtils.isNotEmpty(operLog.getOperName()), SysOperLog::getOperName, operLog.getOperName())
                .orderByDesc(SysOperLog::getOperTime);
